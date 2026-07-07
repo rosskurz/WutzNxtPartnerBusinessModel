@@ -18,6 +18,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:13.5px/1.5 -apple-syste
 h1,h2,h3,h4{margin:0;font-weight:650;line-height:1.25}
 button{font:inherit;cursor:pointer}
 input,select,textarea{font:inherit;color:var(--ink)}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235b6573' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 6px center;background-size:20px 20px;padding-right:28px!important}
 .wrap{max-width:1320px;margin:0 auto;padding:18px 20px 90px}
 
 .topbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between;margin-bottom:14px}
@@ -69,7 +70,7 @@ td.editcell input:focus{border-color:var(--accent);outline:none}
 .fin-section{padding:14px 16px}
 .fin-section h3{font-size:14px;text-transform:none;letter-spacing:0;color:var(--ink);margin-bottom:6px}
 .fin-section table{margin-bottom:4px}
-.fin-select{border:1px solid var(--line);border-radius:6px;padding:4px 5px;font-size:12px;width:100%;min-width:0;background:#fff}
+.fin-select{border:1px solid var(--line);border-radius:6px;padding:4px 5px;font-size:12px;width:100%;min-width:0;background-color:#fff}
 .fin-section td input[type="text"]{width:100%;border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-size:12px}
 .fstat{background:#fbfcfd;border:1px solid var(--line);border-radius:8px;padding:8px;text-align:center}
 .fsum-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
@@ -128,6 +129,19 @@ td.editcell input:focus{border-color:var(--accent);outline:none}
 .lr-acts{display:flex;gap:4px;flex:none}
 .sow-pill{border-radius:99px;padding:2px 10px;font-size:11px;font-weight:600;white-space:nowrap;flex:none}
 .sow-legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.sow-list .l1{gap:11px;align-items:center}
+.sow-list .lead-name{font-size:25px}
+.sow-list .co-logo svg,.sow-list .co-logo img{height:26px;width:auto}
+.sow-list .co-avatar{width:28px;height:28px;font-size:15px;border-radius:6px}
+.sow-owner{font-size:19px;color:var(--muted);white-space:nowrap;flex:none}
+.sow-list .sow-pill{font-size:19px;padding:4px 14px}
+.sow-list .lead-item{padding:12px 0}
+.view-toggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:14px}
+.view-toggle button{border:none;background:#fff;padding:7px 14px;font-size:12.5px;color:var(--muted);font-weight:550;cursor:pointer}
+.view-toggle button.on{background:var(--accent);color:#fff}
+.tn-table th,.tn-table td{text-align:left;font-size:13px}
+.tn-table th.c,.tn-table td.c{text-align:center}
+.tn-check{width:18px;height:18px;cursor:pointer;accent-color:var(--accent)}
 .recon-banner{border-radius:8px;padding:8px 10px;font-size:12.5px;font-weight:600;margin-bottom:8px}
 .recon-removed{color:var(--red);font-size:12px}
 .recon-added{color:var(--green);font-size:12px}
@@ -379,10 +393,12 @@ function defaultState(){
     {id:uid(),name:"Ashleigh Hopkins",company:"",role:"",notes:"",status:1}
   ];
   s.sows=[
-    {id:uid(),company:"Intuit",stakeholders:["Jeff Kennedy","Travis's team"],title:"Pilot project with Intuit LDRs",
+    {id:uid(),company:"Intuit",owner:"",stakeholders:["Jeff Kennedy","Travis's team"],title:"Pilot project with Intuit LDRs",
      description:"Entire architecture defined and could load it into an agent. Could free up 250 people into selling. Hybrid model for Intuit — catch marketing-generated content agentically and close it in sales (Travis's team).",
      startDate:"",lengthMonths:0,people:0,status:"In discussion"}
   ];
+  s.people=[];
+  s.trainingNeedsStatus={};
   return s;
 }
 function migrateLeads(v){
@@ -392,7 +408,8 @@ function migrateLeads(v){
     const has=v.primaryName||v.primaryCompany||v.wutznxtContact||(v.subSources&&v.subSources.length)||(v.trainingTypes&&v.trainingTypes.length);
     arr = has ? [{id:uid(),name:v.primaryName||"",company:v.primaryCompany||"",role:"",contact:v.wutznxtContact||"",trainingsNeeded:(v.trainingTypes||[]).join(", "),status:1}] : [];
   } else arr=[];
-  arr.forEach(e=>{ if(!e.id)e.id=uid(); if(!e.status)e.status=1; });
+  arr.forEach(e=>{ if(!e.id)e.id=uid(); if(!e.status)e.status=1;
+    if(typeof e.trainingsNeeded==="string") e.trainingsNeeded=e.trainingsNeeded.split(/[\n,;]+/).map(x=>x.trim()).filter(Boolean); });
   return arr;
 }
 function migrateFin(v){
@@ -414,9 +431,12 @@ function normalizeState(st){
   if(Array.isArray(st.trainingLinks)) base.trainingLinks=st.trainingLinks;
   if(Array.isArray(st.generalContacts)) base.generalContacts=st.generalContacts;
   if(Array.isArray(st.sows)) base.sows=st.sows;
+  if(Array.isArray(st.people)) base.people=st.people;
+  if(st.trainingNeedsStatus&&typeof st.trainingNeedsStatus==="object") base.trainingNeedsStatus=st.trainingNeedsStatus;
   base.trainingLinks.forEach(x=>{if(!x.id)x.id=uid();});
   base.generalContacts.forEach(x=>{if(!x.id)x.id=uid(); if(!x.status)x.status=1;});
-  base.sows.forEach(x=>{if(!x.id)x.id=uid(); if(!Array.isArray(x.stakeholders))x.stakeholders=[]; if(!x.status)x.status="In discussion";});
+  base.sows.forEach(x=>{if(!x.id)x.id=uid(); if(typeof x.owner!=="string")x.owner=""; if(!Array.isArray(x.stakeholders))x.stakeholders=[]; if(!x.status)x.status="In discussion";});
+  base.people.forEach(x=>{if(!x.id)x.id=uid(); ["certs","canLead","led"].forEach(k=>{if(!Array.isArray(x[k]))x[k]=[];});});
   BU_DEFS.forEach(d=>{ if(st.bu[d.key]) base.bu[d.key]=Object.assign(buDefault(d.key), st.bu[d.key]); });
   BU_DEFS.forEach(d=>{
     base.bu[d.key].leads=migrateLeads(base.bu[d.key].leads);
@@ -434,6 +454,7 @@ let state=load();
 let BUS=BU_DEFS.map(d=>Object.assign({},d,{data:state.bu[d.key]}));
 let archiveOpen={};
 let leadOpen=null;
+let leadsView="sources";
 
 /* Most recent Saturday 09:00 MST (UTC-7), as a UTC timestamp */
 function lastSaturday9MST(){
@@ -564,9 +585,7 @@ function renderDashboard(){
     BUS.map(bu=> bu.key==="ISV"
       ? metricCard(bu,"ISV Products","plan","plan tab", strListEditor(bu.data.products,"Product name","Add product"))
       : metricCard(bu,bu.pipelineLabel,"tasks","task list", pipelineTable(bu))),
-    BUS.map(bu=> metricCard(bu,"Clients Purchasing Credits","financials","projections", creditsTable(bu))),
-    BUS.map(finSnapshot),
-    BUS.map(highestBox)
+    BUS.map(bu=> metricCard(bu,"Clients Purchasing Credits","financials","projections", creditsTable(bu)))
   ];
   rows.forEach(r=>r.forEach(cell=>c.appendChild(cell)));
 }
@@ -769,11 +788,14 @@ function tasksCol(bu){
     bu.data.tasks.push({id:uid(),title:v,subject:scat.value||"?",owner:oin.value.trim(),status:"Not started",priority:pin.value,due:din.value,note:nin.value.trim(),archived:false});
     save();renderTasks();renderDashboard(); };
   [tin,oin,nin].forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")add();}));
-  col.appendChild(el("div",{class:"card add-card"},
+  const addCard=el("div",{class:"card add-card"},
     tin,
     el("div",{class:"add-grid"},scat,oin,din,pin),
     nin,
-    el("div",{style:"text-align:right"}, el("button",{class:"btn primary small",onClick:add},"Add task"))));
+    el("div",{style:"text-align:right"}, el("button",{class:"btn primary small",onClick:add},"Add task")));
+  addCard.style.display="none";
+  const addToggle=el("button",{class:"btn small",style:"align-self:flex-start",onClick:()=>{ const open=addCard.style.display==="none"; addCard.style.display=open?"flex":"none"; if(open)tin.focus(); }},"+ New task");
+  col.appendChild(addToggle); col.appendChild(addCard);
   const active=bu.data.tasks.filter(t=>!t.archived)
     .sort((a,b)=>(PRI_ORDER[a.priority]-PRI_ORDER[b.priority])||((a.due||"9999").localeCompare(b.due||"9999")));
   const archived=bu.data.tasks.filter(t=>t.archived);
@@ -801,7 +823,7 @@ const LEAD_FIELDS={
     {k:"manager",label:"Manager"},
     {k:"managerUp1",label:"Manager Up1"},
     {k:"managerUp2",label:"Manager Up2"},
-    {k:"trainingsNeeded",label:"Trainings Needed",type:"area"},
+    {k:"trainingsNeeded",label:"Trainings Needed",type:"chips"},
     {k:"providesTraining",label:"WutzNxt provides the training",type:"check"}
   ],
   SI:[
@@ -821,9 +843,11 @@ const LEAD_FIELDS={
 };
 const GC_FIELDS=[{k:"name",label:"Name"},{k:"company",label:"Company"},{k:"role",label:"Role"},{k:"notes",label:"Notes",type:"area"}];
 const MS_LOGO='<svg viewBox="0 0 20 20" width="16" height="16" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="9" height="9" fill="#F25022"/><rect x="11" y="0" width="9" height="9" fill="#7FBA00"/><rect x="0" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>';
+const INTUIT_LOGO='<svg viewBox="0 0 58 20" width="46" height="16" xmlns="http://www.w3.org/2000/svg"><text x="1" y="10" dominant-baseline="central" font-family="Segoe UI,Helvetica Neue,Arial,sans-serif" font-size="17" font-weight="800" fill="#236CFF" letter-spacing="0.1">intuit</text></svg>';
 function companyLogo(company){
   const c=(company||"").toLowerCase();
   if(c.indexOf("microsoft")>=0) return el("span",{class:"co-logo",html:MS_LOGO});
+  if(c.indexOf("intuit")>=0) return el("span",{class:"co-logo",html:INTUIT_LOGO});
   const letter=((company||"").trim().charAt(0)||"?").toUpperCase();
   return el("span",{class:"co-avatar",text:letter});
 }
@@ -858,6 +882,9 @@ function entryRow(ent,fields,arr,after){
       const ta=el("textarea",{class:"lead-ta"}); ta.value=ent[f.k]||"";
       ta.addEventListener("input",()=>{ent[f.k]=ta.value;save();});
       details.appendChild(el("div",{class:"fld"},el("label",{class:"fld-l",text:f.label}),ta));
+    }else if(f.type==="chips"){
+      if(!Array.isArray(ent[f.k]))ent[f.k]=[];
+      details.appendChild(el("div",{class:"fld"},el("label",{class:"fld-l",text:f.label}),chipList(ent[f.k])));
     }else{
       const inp=textInput(()=>ent[f.k],v=>{ ent[f.k]=v;
         if(f.k==="name")nameEl.textContent=v||"(no name)";
@@ -882,14 +909,38 @@ function leadsCol(bu){
   bu.data.leads.forEach(ent=>card.appendChild(leadRow(bu,ent)));
   col.appendChild(card); return col;
 }
+function renderTrainingsNeeded(){
+  const counts={};
+  BUS.forEach(bu=> (bu.data.leads||[]).forEach(l=>{ (Array.isArray(l.trainingsNeeded)?l.trainingsNeeded:[]).forEach(tn=>{ const key=(tn||"").trim(); if(!key)return; counts[key]=(counts[key]||0)+1; }); }));
+  const names=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]||a.localeCompare(b));
+  const st=state.trainingNeedsStatus||(state.trainingNeedsStatus={});
+  const card=el("div",{class:"card",style:"max-width:760px"}); card.appendChild(el("h3",{text:"Trainings Needed"}));
+  if(!names.length){ card.appendChild(el("div",{class:"empty-state",text:"No trainings needed captured yet. Add them in the Lead sources view (a lead source → Trainings Needed)."})); return card; }
+  const body=el("tbody");
+  names.forEach(nm=>{
+    const cur=st[nm]||"";
+    const mk=(val)=>{ const cb=el("input",{type:"checkbox",class:"tn-check"}); cb.checked=cur===val; cb.addEventListener("change",()=>{ st[nm]=cb.checked?val:""; save(); renderLeads(); }); return el("td",{class:"c"},cb); };
+    body.appendChild(el("tr",{},el("td",{text:nm}),el("td",{class:"c",text:String(counts[nm])}),mk("host"),mk("working"),mk("not")));
+  });
+  card.appendChild(el("table",{class:"tn-table"},el("thead",{},el("tr",{},
+    el("th",{text:"Training needed"}),el("th",{class:"c",text:"# Lead sources"}),
+    el("th",{class:"c",text:"Can host"}),el("th",{class:"c",text:"Working on it"}),el("th",{class:"c",text:"Not planning"}))),body));
+  return card;
+}
 function renderLeads(){
-  const c=$("#cols-leads"); c.className="lead-wrap"; c.innerHTML="";
-  const grid=el("div",{class:"cols"}); BUS.forEach(bu=>grid.appendChild(leadsCol(bu))); c.appendChild(grid);
+  const c=$("#cols-leads"); c.className=""; c.innerHTML="";
+  c.appendChild(el("div",{class:"view-toggle"},
+    el("button",{class:leadsView==="sources"?"on":"",onClick:()=>{leadsView="sources";renderLeads();}},"Lead sources"),
+    el("button",{class:leadsView==="needs"?"on":"",onClick:()=>{leadsView="needs";renderLeads();}},"Trainings needed")));
+  if(leadsView==="needs"){ c.appendChild(renderTrainingsNeeded()); return; }
+  const wrap=el("div",{class:"lead-wrap"});
+  const grid=el("div",{class:"cols"}); BUS.forEach(bu=>grid.appendChild(leadsCol(bu))); wrap.appendChild(grid);
   const card=el("div",{class:"card"}); card.appendChild(el("h3",{text:"General Contacts"}));
   card.appendChild(el("button",{class:"btn primary small",style:"margin-bottom:10px",onClick:()=>{const id=uid();state.generalContacts.push({id,name:"",company:"",role:"",notes:"",status:1});leadOpen=id;save();renderLeads();}},"+ Add contact"));
   if(!state.generalContacts.length) card.appendChild(el("div",{class:"empty-state",text:"No contacts yet."}));
   state.generalContacts.forEach(item=>card.appendChild(entryRow(item,GC_FIELDS,state.generalContacts,renderLeads)));
-  c.appendChild(card);
+  wrap.appendChild(card);
+  c.appendChild(wrap);
 }
 
 /* ---------- TRAINING LINKS ---------- */
@@ -958,7 +1009,7 @@ function renderPlan(){
   for(let i=0;i<maxLen;i++){
     BUS.forEach(bu=>{ const sec=bu.data.plan[i]; c.appendChild(sec?planCard(bu,sec):el("div")); });
   }
-  BUS.forEach(bu=>c.appendChild(el("button",{class:"btn small ghost",onClick:()=>{bu.data.plan.push({id:uid(),title:"New section",type:"text",body:""});save();renderPlan();}},"+ Add section")));
+  c.appendChild(el("button",{class:"btn small ghost",style:"grid-column:1/-1;justify-self:start",onClick:()=>{ BUS.forEach(bu=>bu.data.plan.push({id:uid(),title:"New section",type:"text",body:""})); save(); renderPlan(); }},"+ Add section (all columns)"));
 }
 
 /* ---------- NOTES ---------- */
@@ -971,11 +1022,35 @@ function notesCol(bu){
 }
 function renderNotes(){ const c=$("#cols-notes"); c.innerHTML=""; BUS.forEach(bu=>c.appendChild(notesCol(bu))); }
 
-/* ---------- PEOPLE RESOURCES (placeholder) ---------- */
-function renderPeople(){ const c=$("#cols-people"); c.innerHTML="";
-  c.appendChild(el("div",{class:"card",style:"max-width:820px"},
-    el("h3",{text:"People Resources"}),
-    el("div",{class:"empty-state",text:"Coming soon — tell Claude how you'd like this tab set up."})));
+/* ---------- PEOPLE RESOURCES ---------- */
+function peopleRow(p){
+  ["certs","canLead","led"].forEach(k=>{ if(!Array.isArray(p[k]))p[k]=[]; });
+  const item=el("div",{class:"lead-item"});
+  const details=el("div",{class:"lead-details"}); const isOpen=(p.id===leadOpen); details.style.display=isOpen?"block":"none";
+  const chev=el("button",{class:"ti-chev"+(isOpen?" open":""),title:"Show details",onClick:()=>{const o=details.style.display==="none";details.style.display=o?"block":"none";chev.classList.toggle("open",o);}},"▸");
+  const nameEl=el("span",{class:"lead-name",style:"flex:1",text:p.name||"(no name)"});
+  const meta=el("span",{class:"hp-sub"});
+  const setMeta=()=>{ meta.textContent=p.certs.length+" certs · "+p.canLead.length+" can lead · "+p.led.length+" led"; };
+  setMeta();
+  const l1=el("div",{class:"l1"},chev,nameEl,meta);
+  details.appendChild(fld("Name", textInput(()=>p.name,v=>{p.name=v;nameEl.textContent=v||"(no name)";})));
+  details.appendChild(el("label",{class:"fld-l",style:"margin-top:6px",text:"Certifications"}));
+  details.appendChild(chipList(p.certs));
+  details.appendChild(el("label",{class:"fld-l",style:"margin-top:10px",text:"Training subjects capable to lead"}));
+  details.appendChild(chipList(p.canLead));
+  details.appendChild(el("label",{class:"fld-l",style:"margin-top:10px",text:"Training subjects led"}));
+  details.appendChild(chipList(p.led));
+  details.appendChild(el("button",{class:"del",style:"margin-top:10px;font-size:12px",onClick:()=>{const i=state.people.indexOf(p);if(i>=0)state.people.splice(i,1);save();renderPeople();}},"✕ Delete person"));
+  item.appendChild(l1); item.appendChild(details);
+  return item;
+}
+function renderPeople(){
+  const c=$("#cols-people"); c.innerHTML="";
+  const card=el("div",{class:"card",style:"max-width:820px"}); card.appendChild(el("h3",{text:"People Resources"}));
+  card.appendChild(el("button",{class:"btn primary small",style:"margin-bottom:10px",onClick:()=>{const id=uid();state.people.push({id,name:"",certs:[],canLead:[],led:[]});leadOpen=id;save();renderPeople();}},"+ Add person"));
+  if(!state.people.length) card.appendChild(el("div",{class:"empty-state",text:"No people yet."}));
+  state.people.forEach(p=>card.appendChild(peopleRow(p)));
+  c.appendChild(card);
 }
 
 /* ---------- SOWs ---------- */
@@ -996,11 +1071,14 @@ function sowRow(sow){
   const details=el("div",{class:"lead-details"}); const isOpen=(sow.id===leadOpen); details.style.display=isOpen?"block":"none";
   const chev=el("button",{class:"ti-chev"+(isOpen?" open":""),title:"Show details",onClick:()=>{const o=details.style.display==="none";details.style.display=o?"block":"none";chev.classList.toggle("open",o);}},"▸");
   let logoEl=companyLogo(sow.company);
-  const titleEl=el("span",{class:"lead-name",style:"flex:1",text:(sow.company?sow.company+" — ":"")+(sow.title||"(untitled)")});
+  const titleEl=el("span",{class:"lead-name",text:(sow.company?sow.company+" — ":"")+(sow.title||"(untitled)")});
+  const ownerEl=el("span",{class:"sow-owner",text:sow.owner?("· "+sow.owner):""});
+  const spacer=el("div",{style:"flex:1"});
   let pill=sowPill(sow.status);
-  const l1=el("div",{class:"l1"},chev,logoEl,titleEl,pill);
+  const l1=el("div",{class:"l1"},chev,logoEl,titleEl,ownerEl,spacer,pill);
   const refreshTitle=()=>{ titleEl.textContent=(sow.company?sow.company+" — ":"")+(sow.title||"(untitled)"); };
   details.appendChild(fld("Company", textInput(()=>sow.company,v=>{sow.company=v;const nl=companyLogo(v);l1.replaceChild(nl,logoEl);logoEl=nl;refreshTitle();})));
+  details.appendChild(fld("Owner", textInput(()=>sow.owner,v=>{sow.owner=v;ownerEl.textContent=v?("· "+v):"";})));
   details.appendChild(fld("Stakeholders", chipList(sow.stakeholders)));
   details.appendChild(fld("Title", textInput(()=>sow.title,v=>{sow.title=v;refreshTitle();})));
   const ta=el("textarea",{class:"lead-ta"}); ta.value=sow.description||""; ta.addEventListener("input",()=>{sow.description=ta.value;save();});
@@ -1016,9 +1094,8 @@ function sowRow(sow){
 }
 function renderSOWs(){
   const c=$("#cols-sows"); c.innerHTML="";
-  const card=el("div",{class:"card",style:"max-width:920px"}); card.appendChild(el("h3",{text:"Statements of Work (SOWs)"}));
-  card.appendChild(el("button",{class:"btn primary small",style:"margin-bottom:10px",onClick:()=>{const id=uid();state.sows.push({id,company:"",stakeholders:[],title:"",description:"",startDate:"",lengthMonths:0,people:0,status:"In discussion"});leadOpen=id;save();renderSOWs();}},"+ Add SOW"));
-  card.appendChild(sowLegend());
+  const card=el("div",{class:"card sow-list",style:"max-width:960px"}); card.appendChild(el("h3",{text:"Statements of Work (SOWs)"}));
+  card.appendChild(el("button",{class:"btn primary small",style:"margin-bottom:10px",onClick:()=>{const id=uid();state.sows.push({id,company:"",owner:"",stakeholders:[],title:"",description:"",startDate:"",lengthMonths:0,people:0,status:"In discussion"});leadOpen=id;save();renderSOWs();}},"+ Add SOW"));
   if(!state.sows.length) card.appendChild(el("div",{class:"empty-state",text:"No SOWs yet."}));
   state.sows.forEach(s=>card.appendChild(sowRow(s)));
   c.appendChild(card);
@@ -1039,6 +1116,7 @@ function collectItems(st){
   push("SOWs", st&&st.sows, s=>(s.company?s.company+" — ":"")+(s.title||"(untitled)"));
   push("General contacts", st&&st.generalContacts, c=>c.name||"(no name)");
   push("Training links", st&&st.trainingLinks, l=>l.title||l.url||"(link)");
+  push("People resources", st&&st.people, p=>p.name||"(no name)");
   return out;
 }
 function totalCount(st){ const c=collectItems(st); return Object.keys(c).reduce((a,k)=>a+c[k].length,0); }
