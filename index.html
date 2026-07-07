@@ -32,6 +32,7 @@ select{appearance:none;-webkit-appearance:none;background-image:url("data:image/
 .btn.small{padding:4px 9px;font-size:12px}
 .btn.ghost{box-shadow:none;background:transparent;border-style:dashed}
 .savechip{font-size:11px;color:var(--muted)}
+.savechip.warn{color:#fff;background:var(--red);padding:3px 8px;border-radius:6px;font-weight:700}
 
 .tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:16px;flex-wrap:wrap}
 .tab{background:none;border:none;padding:10px 14px;color:var(--muted);font-weight:550;border-bottom:2px solid transparent;margin-bottom:-1px}
@@ -455,6 +456,7 @@ let BUS=BU_DEFS.map(d=>Object.assign({},d,{data:state.bu[d.key]}));
 let archiveOpen={};
 let leadOpen=null;
 let leadsView="sources";
+let cloudReady=false;
 
 /* Most recent Saturday 09:00 MST (UTC-7), as a UTC timestamp */
 function lastSaturday9MST(){
@@ -475,10 +477,10 @@ function runArchive(){
 }
 
 let saveT;
-function save(){ clearTimeout(saveT); state.ts=Date.now(); $("#saveChip").textContent="Saving…";
+function save(){ clearTimeout(saveT); state.ts=Date.now(); $("#saveChip").textContent="Saving…"; $("#saveChip").className="savechip";
   saveT=setTimeout(()=>{ try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
     try{takeSnapshot("edit");}catch(e){}
-    if(typeof SB_URL!=="undefined"&&SB_URL){ cloudSave(state).then(()=>{$("#saveChip").textContent="Synced ✓";}).catch(()=>{$("#saveChip").textContent="Saved locally";}); }
+    if(typeof SB_URL!=="undefined"&&SB_URL){ cloudSave(state).then(()=>{$("#saveChip").textContent="Synced ✓";$("#saveChip").className="savechip";}).catch(()=>{$("#saveChip").textContent="⚠ NOT saved to cloud";$("#saveChip").className="savechip warn";}); }
     else $("#saveChip").textContent="Saved";
   },400); }
 
@@ -1212,7 +1214,7 @@ $("#ioApply").addEventListener("click",()=>{ try{ const s=JSON.parse($("#ioText"
   renderTab(document.querySelector(".tab.active").dataset.tab); dlg.close();
 }catch(e){ alert("Could not parse JSON: "+e.message); } });
 
-/* ---------- cloud sync (Supabase) — timestamp-based last-write-wins ---------- */
+/* ---------- cloud sync (Supabase) ---------- */
 const SB_URL="https://cctewpwmfgibuidhlehk.supabase.co";
 const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjdGV3cHdtZmdpYnVpZGhsZWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI5MTg3MTQsImV4cCI6MjA5ODQ5NDcxNH0.7G-5LKJkL6IH9Hi7jMfL93GDPI3sLvDtA-WYqRzWOEI";
 const SB_ROW="main";
@@ -1224,8 +1226,11 @@ async function cloudLoad(){
   if(!r.ok) throw new Error("load "+r.status);
   const rows=await r.json(); return (rows[0]&&rows[0].data)||null;
 }
+/* Upsert (POST + merge-duplicates): reliably writes whether the row exists or not */
 async function cloudSave(obj){
-  const r=await fetch(SB_REST+"?id=eq."+SB_ROW,{method:"PATCH",headers:Object.assign({Prefer:"return=minimal"},SB_HEAD),body:JSON.stringify({data:obj})});
+  const r=await fetch(SB_REST,{method:"POST",
+    headers:Object.assign({Prefer:"resolution=merge-duplicates,return=minimal"},SB_HEAD),
+    body:JSON.stringify({id:SB_ROW,data:obj})});
   if(!r.ok) throw new Error("save "+r.status);
   lastCloudJSON=JSON.stringify(obj);
 }
@@ -1246,15 +1251,12 @@ async function pollCloud(){
 async function initCloud(){
   try{
     const d=await cloudLoad();
-    if(d&&d.bu){
-      const rt=d.ts||0, lt=state.ts||0;
-      if(rt>=lt){ lastCloudJSON=JSON.stringify(d); applyRemote(d); }   /* cloud newer-or-equal → take the shared cloud copy (keeps current data) */
-      else { await cloudSave(state); }                                /* local strictly newer → push it up */
-    }
-    else { await cloudSave(state); }
-    $("#saveChip").textContent="Synced ✓";
+    if(d&&d.bu){ lastCloudJSON=JSON.stringify(d); applyRemote(d); }  /* cloud has data → ALWAYS load it; never overwrite the cloud on page load */
+    else { await cloudSave(state); }                                 /* cloud is empty → seed it once */
+    cloudReady=true;
+    $("#saveChip").textContent="Synced ✓"; $("#saveChip").className="savechip";
     setInterval(pollCloud,15000);
-  }catch(e){ $("#saveChip").textContent="Local only"; }
+  }catch(e){ $("#saveChip").textContent="⚠ Cloud offline (local only)"; $("#saveChip").className="savechip warn"; }
 }
 
 /* ---------- init ---------- */
