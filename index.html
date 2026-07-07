@@ -108,22 +108,6 @@ td.editcell input:focus{border-color:var(--accent);outline:none}
 .editable:focus{box-shadow:0 0 0 2px var(--accent-soft);background:#fff}
 .editable.empty:before{content:attr(data-ph);color:#9aa3b0}
 .editable ul{margin:6px 0;padding-left:18px}
-.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.chip{display:inline-flex;align-items:center;gap:4px;background:var(--grey-soft);color:var(--ink);border-radius:99px;padding:3px 4px 3px 10px;font-size:12px}
-.chip-x{border:none;background:none;color:var(--muted);font-size:15px;line-height:1;cursor:pointer;padding:0 3px}
-.chip-x:hover{color:var(--red)}
-.chip-input{border:1px dashed var(--line);border-radius:99px;padding:3px 10px;font-size:12px;min-width:90px;flex:1}
-.chip-input:focus{border-color:var(--accent);outline:none}
-.lead-wrap{display:flex;flex-direction:column;gap:14px}
-.link-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
-.link-row:last-child{border-bottom:none}
-.link-a{color:var(--accent);font-weight:550;text-decoration:none;word-break:break-word;padding-top:2px}
-.link-a:hover{text-decoration:underline}
-.link-edit{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.link-edit input{flex:1 1 200px;min-width:120px;border:1px solid var(--line);border-radius:7px;padding:7px 9px}
-.link-edit input:focus{border-color:var(--accent);outline:none}
-.sow-pill{border-radius:99px;padding:2px 10px;font-size:11px;font-weight:600;white-space:nowrap;flex:none}
-.sow-legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
 
 .add-card{display:flex;flex-direction:column;gap:8px}
 .add-card>input{border:1px solid var(--line);border-radius:7px;padding:7px 9px;width:100%}
@@ -147,12 +131,11 @@ td.editcell input:focus{border-color:var(--accent);outline:none}
 .task-item .ti-note.empty:before{content:"+ add note";color:#aab2bd}
 .subj-chip{flex:none;font-size:10.5px;color:var(--muted);background:var(--grey-soft);border-radius:99px;padding:1px 8px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 select.s-Highest{color:var(--red);background:var(--red-soft);font-weight:650}
-.chk{appearance:none;-webkit-appearance:none;width:16px;height:16px;flex:none;border:1.5px solid #111;border-radius:3px;margin-left:2px;cursor:pointer;position:relative;background:#98a2b3}
-.chk.p-VeryHigh{background:#ef6c00}
-.chk.p-High{background:#eab308}
-.chk.p-Medium{background:#2f6fed}
-.chk.p-Low{background:#98a2b3}
-.chk:checked::after{content:"✓";position:absolute;top:-2px;left:2px;color:#fff;font-size:12px;font-weight:800;line-height:1}
+.chk{width:16px;height:16px;flex:none;border-radius:3px;margin-left:2px;accent-color:#98a2b3}
+.chk.p-VeryHigh{accent-color:#ef6c00;box-shadow:0 0 0 2px #ef6c00}
+.chk.p-High{accent-color:#eab308;box-shadow:0 0 0 2px #eab308}
+.chk.p-Medium{accent-color:#2f6fed;box-shadow:0 0 0 2px #2f6fed}
+.chk.p-Low{accent-color:#98a2b3;box-shadow:0 0 0 2px #98a2b3}
 .ti-chev{flex:none;border:none;background:none;color:var(--muted);font-size:12px;line-height:1;padding:3px 5px;border-radius:6px;transition:transform .15s}
 .ti-chev.open{transform:rotate(90deg)}
 .ti-chev:hover{background:var(--grey-soft)}
@@ -168,26 +151,16 @@ select.s-Highest{color:var(--red);background:var(--red-soft);font-weight:650}
 .del{color:var(--grey);background:none;border:none;font-size:14px;line-height:1;padding:2px 5px;border-radius:6px;flex:none}
 .del:hover{color:var(--red);background:var(--red-soft)}
 
-.fld{margin-bottom:8px}
-.fld-l{display:block;font-size:11.5px;color:var(--muted);margin:0 0 3px}
-.fld input{width:100%;border:1px solid var(--line);border-radius:7px;padding:7px 9px}
-.fld input:focus{border-color:var(--accent);outline:none}
-
-.lead-item{border-top:1px solid var(--line);padding:8px 0}
-.lead-item:first-of-type{border-top:none}
-.lead-item .l1{display:flex;align-items:center;gap:8px}
-.co-logo{display:inline-flex;flex:none;line-height:0}
-.co-avatar{flex:none;width:18px;height:18px;border-radius:4px;background:var(--grey-soft);color:var(--muted);font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
-.lead-name{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.lead-role{color:var(--muted);font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
-.lead-status{margin-left:auto;flex:none;border-radius:99px;padding:2px 8px;font-size:10px;letter-spacing:1px;white-space:nowrap}
-.lead-status.st-green{background:var(--green-soft);color:var(--green)}
-.lead-status.st-yellow{background:var(--amber-soft);color:var(--amber)}
-.lead-status.st-grey{background:var(--grey-soft);color:var(--grey)}
-.lead-details{margin-top:8px;padding-left:26px}
-.lead-ta{width:100%;min-height:46px;border:1px solid var(--line);border-radius:7px;padding:6px 8px;resize:vertical}
-.lead-check{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:13px}
-.star-edit .star{cursor:pointer;font-size:17px;color:#e0a400;letter-spacing:2px}
+.lead-add{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.lead-add input{flex:1 1 110px;min-width:90px;border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:12px}
+.lead-add input:focus{border-color:var(--accent);outline:none}
+.lead-add .btn{flex:none}
+.lead-row{display:flex;align-items:flex-start;gap:8px;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line)}
+.lead-row:last-child{border-bottom:none}
+.lr-main{min-width:0}
+.lr-title{font-weight:600;font-size:12.5px}
+.lr-meta{font-size:11.5px;color:var(--muted);margin-top:2px}
+.lr-acts{display:flex;gap:4px;flex:none}
 
 textarea.notes{width:100%;min-height:240px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;resize:vertical}
 .empty-state{color:var(--muted);font-style:italic;padding:8px 2px;font-size:12.5px}
@@ -199,11 +172,10 @@ dialog textarea{width:100%;min-height:240px;border:1px solid var(--line);border-
 .dlg-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
 
 @media print{
-  .toolbar,.tabs,.add-card,.lead-add,.del,.chk,.jump,.hp-jump,.quick,.lr-acts,.ti-chev{display:none!important}
+  .toolbar,.tabs,.add-card,.lead-add,.del,.chk,.jump,.hp-jump,.quick,.lr-acts{display:none!important}
   .panel{display:block!important;page-break-before:always}
   .panel:first-of-type{page-break-before:avoid}
   .cols{grid-template-columns:repeat(3,1fr)!important}
-  .lead-details{display:block!important}
 }
 </style>
 </head>
@@ -221,26 +193,20 @@ dialog textarea{width:100%;min-height:240px;border:1px solid var(--line);border-
   </div>
 
   <div class="tabs" id="tabs">
-    <button class="tab active" data-tab="plan">Plan</button>
-    <button class="tab" data-tab="tasks">Tasks</button>
-    <button class="tab" data-tab="people">People Resources</button>
-    <button class="tab" data-tab="leads">Lead Sources</button>
-    <button class="tab" data-tab="sows">SOWs</button>
-    <button class="tab" data-tab="training">Training Links</button>
+    <button class="tab active" data-tab="dashboard">Dashboard</button>
     <button class="tab" data-tab="financials">Financial Projections</button>
+    <button class="tab" data-tab="tasks">Tasks</button>
+    <button class="tab" data-tab="leads">Lead Sources</button>
+    <button class="tab" data-tab="plan">Plan</button>
     <button class="tab" data-tab="notes">Notes</button>
-    <button class="tab" data-tab="dashboard">Dashboard</button>
   </div>
 
-  <section class="panel active" id="panel-plan"><div class="cols" id="cols-plan"></div></section>
-  <section class="panel" id="panel-tasks"><div class="cols" id="cols-tasks"></div></section>
-  <section class="panel" id="panel-people"><div id="cols-people"></div></section>
-  <section class="panel" id="panel-leads"><div class="cols" id="cols-leads"></div></section>
-  <section class="panel" id="panel-sows"><div id="cols-sows"></div></section>
-  <section class="panel" id="panel-training"><div id="cols-training"></div></section>
+  <section class="panel active" id="panel-dashboard"><div class="cols" id="cols-dashboard"></div></section>
   <section class="panel" id="panel-financials"><div class="cols" id="cols-financials"></div></section>
+  <section class="panel" id="panel-tasks"><div class="cols" id="cols-tasks"></div></section>
+  <section class="panel" id="panel-leads"><div class="cols" id="cols-leads"></div></section>
+  <section class="panel" id="panel-plan"><div class="cols" id="cols-plan"></div></section>
   <section class="panel" id="panel-notes"><div class="cols" id="cols-notes"></div></section>
-  <section class="panel" id="panel-dashboard"><div class="cols" id="cols-dashboard"></div></section>
 
 </div>
 
@@ -291,47 +257,23 @@ const BU_DEFS=[
   {key:"ISV",name:"Independent Software Vendor (ISV)",accent:"#7a5af8",pipelineLabel:null}
 ];
 function planSeed(key){
-  const S=(title,type,body)=>{const o={id:uid(),title,type};if(type==="chips")o.items=[];else o.body=body||"";return o;};
-  const secs=[
-    S("Overview","text"),
-    S("How we make $","chips"),
-    S("Opportunity","text"),
-    S("Service offering","text"),
-    S("Contractor-Types Needed","chips"),
-    S("Target clients","text"),
-    S("Pricing & revenue","text")
-  ];
+  const sections=[["Overview",""],["Problem & opportunity",""],["Service offering",""],["Target clients",""],
+    ["Pricing & revenue",""],["Go-to-market",""],["Team & org",""],["Milestones",""],["Risks",""]];
   if(key==="TSP"){
-    secs[0].body="Certified Microsoft Training partner that leads in-person and virtual training sessions for Microsoft customers.";
-    secs[2].body="Microsoft needs certified trainers to train their customers and has budget to pay for it. WutzNxt can leverage strong Microsoft relationships to get leads, referrals, and introductions to those at Microsoft who decide which partner to assign to a training opportunity. Trainings also open the door for WutzNxt to meet customers and identify other opportunities to work with them.";
-    secs[3].body="High-quality trainings for Microsoft customers: Modern Work, Copilot, and AI Transformation.";
+    sections[0][1]="Certified Microsoft Training partner that leads in-person and virtual training sessions for Microsoft customers.";
+    sections[1][1]="Microsoft needs certified trainers to train their customers and has budget to pay for it. WutzNxt can leverage strong Microsoft relationships to get leads, referrals, and introductions to those at Microsoft who decide which partner to assign to a training opportunity. Trainings also open the door for WutzNxt to meet customers and identify other opportunities to work with them.";
+    sections[2][1]="High-quality trainings for Microsoft customers: Modern Work, Copilot, and AI Transformation.";
   }
-  return secs;
+  return sections.map(s=>({id:uid(),title:s[0],body:s[1]}));
 }
 function migratePlan(key,v){
-  if(Array.isArray(v) && v.length && v.every(s=>s&&s.type)){
-    v.forEach(s=>{ if(!s.id)s.id=uid(); if(s.type==="chips"){ if(!Array.isArray(s.items))s.items=[]; } else if(typeof s.body!=="string")s.body=""; });
-    const si=v.findIndex(s=>s.title==="Service offering");
-    const ci=v.findIndex(s=>s.title==="Contractor-Types Needed");
-    if(si>=0&&ci>=0&&ci!==si+1){ const c=v.splice(ci,1)[0]; const s2=v.findIndex(s=>s.title==="Service offering"); v.splice(s2+1,0,c); }
-    return v;
-  }
-  const RENAME={"Problem & opportunity":"Opportunity","Team & org":"Contractor-Types Needed"};
-  const map={};
-  if(Array.isArray(v)){ v.forEach(s=>{ if(s&&s.title){ const t=RENAME[s.title]||s.title; map[t]={body:s.body||"",items:Array.isArray(s.items)?s.items:null}; } }); }
-  else if(v&&typeof v==="object"){
-    const KM={overview:"Overview",problem:"Opportunity",offering:"Service offering",clients:"Target clients",revenue:"Pricing & revenue",team:"Contractor-Types Needed"};
-    for(const k in KM){ if(v[k]) map[KM[k]]={body:v[k],items:null}; }
-  }
-  return planSeed(key).map(sec=>{
-    const ex=map[sec.title]; if(!ex) return sec;
-    if(sec.type==="chips"){
-      const items=(ex.items&&ex.items.length)?ex.items.slice()
-        :(ex.body?String(ex.body).replace(/<[^>]+>/g," ").split(/[\n,;]+/).map(x=>x.trim()).filter(Boolean):[]);
-      return {id:uid(),title:sec.title,type:"chips",items};
-    }
-    return {id:uid(),title:sec.title,type:"text",body:ex.body||sec.body||""};
-  });
+  if(Array.isArray(v)){ v.forEach(s=>{if(!s.id)s.id=uid();}); return v; }
+  const KEYMAP=[["overview","Overview"],["problem","Problem & opportunity"],["offering","Service offering"],
+    ["clients","Target clients"],["revenue","Pricing & revenue"],["gtm","Go-to-market"],
+    ["team","Team & org"],["milestones","Milestones"],["risks","Risks"]];
+  const o=v||{};
+  if(!KEYMAP.some(km=>o[km[0]]&&String(o[km[0]]).trim())) return planSeed(key);
+  return KEYMAP.map(km=>({id:uid(),title:km[1],body:o[km[0]]||""}));
 }
 function buDefault(key){
   return {
@@ -358,32 +300,17 @@ function defaultState(){
     {id:uid(),subject:"Delivery",title:"Kick off first integration contract",owner:"",status:"Not started",priority:"Very High",due:"",note:"",archived:false}];
   s.bu.ISV.tasks=[
     {id:uid(),subject:"Product",title:"Finalize first ISV product listing",owner:"",status:"Not started",priority:"Very High",due:"",note:"",archived:false}];
-  s.trainingLinks=[
-    {id:uid(),title:"Dan Donohue — Get started: Solutions Partner for Training Services designation (Teams chat)",url:"https://teams.microsoft.com/l/message/19:meeting_Y2EzN2U2ZTEtMGJmZS00NWUxLWI0OWMtNzA0MWRlY2FiZjcw@thread.v2/1782933720070?context=%7B%22contextType%22%3A%22chat%22%7D"},
-    {id:uid(),title:"Get started: Solutions Partner for Training Services designation",url:"https://techcommunity.microsoft.com/t5/training-services-partner/bd-p/LearningPartnerTraining"},
-    {id:uid(),title:"Learning resources",url:"https://partner.microsoft.com/en-us/marketing/learning-resources#/"},
-    {id:uid(),title:"ILT Communication Blog",url:"https://techcommunity.microsoft.com/category/partnerdiscuss/blog/iltcommunicationblog"}
-  ];
-  s.generalContacts=[
-    {id:uid(),name:"Dan Donohue",company:"Microsoft",role:"",notes:"",status:1},
-    {id:uid(),name:"Ashleigh Hopkins",company:"",role:"",notes:"",status:1}
-  ];
-  s.sows=[
-    {id:uid(),company:"Intuit",stakeholders:["Jeff Kennedy","Travis's team"],title:"Pilot project with Intuit LDRs",
-     description:"Entire architecture defined and could load it into an agent. Could free up 250 people into selling. Hybrid model for Intuit — catch marketing-generated content agentically and close it in sales (Travis's team).",
-     startDate:"",lengthMonths:0,people:0,status:"In discussion"}
-  ];
   return s;
 }
 function migrateLeads(v){
-  let arr;
-  if(Array.isArray(v)) arr=v;
-  else if(v&&typeof v==="object"){
+  if(Array.isArray(v)){ v.forEach(e=>{if(!e.id)e.id=uid();}); return v; }
+  if(v&&typeof v==="object"){
     const has=v.primaryName||v.primaryCompany||v.wutznxtContact||(v.subSources&&v.subSources.length)||(v.trainingTypes&&v.trainingTypes.length);
-    arr = has ? [{id:uid(),name:v.primaryName||"",company:v.primaryCompany||"",role:"",contact:v.wutznxtContact||"",trainingsNeeded:(v.trainingTypes||[]).join(", "),status:1}] : [];
-  } else arr=[];
-  arr.forEach(e=>{ if(!e.id)e.id=uid(); if(!e.status)e.status=1; });
-  return arr;
+    if(has) return [{id:uid(),name:v.primaryName||"",company:v.primaryCompany||"",contact:v.wutznxtContact||"",
+      sub:(v.subSources||[]).map(s=>s&&s.name?s.name+(s.company?" ("+s.company+")":""):s).filter(Boolean).join(", "),
+      types:(v.trainingTypes||[]).join(", ")}];
+  }
+  return [];
 }
 function migrateFin(v){
   if(!v||!Array.isArray(v.rev)||!Array.isArray(v.cost)) return {rev:[],cost:[]};
@@ -401,12 +328,6 @@ function normalizeState(st){
   const base=defaultState();
   if(!st||!st.bu) return base;
   base.title=st.title||base.title; base.lastArchiveRun=st.lastArchiveRun||0;
-  if(Array.isArray(st.trainingLinks)) base.trainingLinks=st.trainingLinks;
-  if(Array.isArray(st.generalContacts)) base.generalContacts=st.generalContacts;
-  if(Array.isArray(st.sows)) base.sows=st.sows;
-  base.trainingLinks.forEach(x=>{if(!x.id)x.id=uid();});
-  base.generalContacts.forEach(x=>{if(!x.id)x.id=uid(); if(!x.status)x.status=1;});
-  base.sows.forEach(x=>{if(!x.id)x.id=uid(); if(!Array.isArray(x.stakeholders))x.stakeholders=[]; if(!x.status)x.status="In discussion";});
   BU_DEFS.forEach(d=>{ if(st.bu[d.key]) base.bu[d.key]=Object.assign(buDefault(d.key), st.bu[d.key]); });
   BU_DEFS.forEach(d=>{
     base.bu[d.key].leads=migrateLeads(base.bu[d.key].leads);
@@ -423,7 +344,6 @@ function load(){
 let state=load();
 let BUS=BU_DEFS.map(d=>Object.assign({},d,{data:state.bu[d.key]}));
 let archiveOpen={};
-let leadOpen=null;
 
 /* Most recent Saturday 09:00 MST (UTC-7), as a UTC timestamp */
 function lastSaturday9MST(){
@@ -710,20 +630,13 @@ function renderFinancials(){
 
 /* ---------- TASKS (sorted by priority) ---------- */
 const PRI_ORDER={"Very High":0,High:1,Medium:2,Low:3};
-const CATEGORIES=["Biz Model","Setup","Mkting","Ops","Leads","Team","Finance","?"];
-function catSelect(cur,onChange){
-  const s=el("select"); const opts=CATEGORIES.slice();
-  if(cur&&opts.indexOf(cur)<0) opts.unshift(cur);
-  opts.forEach(o=>s.appendChild(el("option",{text:o}))); s.value=cur||"?";
-  s.addEventListener("change",()=>onChange(s.value)); return s;
-}
 function taskItem(bu,t){
   const item=el("div",{class:"task-item"+(t.status==="Done"?" done":"")+(t.archived?" archived":""),"data-taskid":t.id});
   const chk=el("input",{type:"checkbox",class:"chk p-"+(t.priority||"Medium").replace(/\s/g,"")}); chk.checked=t.status==="Done";
   chk.addEventListener("change",()=>{t.status=chk.checked?"Done":"Not started";save();renderTasks();renderDashboard();});
   const title=el("div",{class:"ti-title",contenteditable:"true",spellcheck:"false",text:t.title});
   title.addEventListener("input",()=>{t.title=title.textContent;save();});
-  const chip=el("span",{class:"subj-chip",text:t.subject||"?"});
+  const chip=t.subject?el("span",{class:"subj-chip",text:t.subject}):null;
   const details=el("div",{class:"ti-details"}); details.style.display="none";
   const chev=el("button",{class:"ti-chev",title:"Show details",onClick:()=>{const o=details.style.display==="none";details.style.display=o?"block":"none";chev.classList.toggle("open",o);}},"▸");
   const del=el("button",{class:"del",onClick:()=>{bu.data.tasks=bu.data.tasks.filter(x=>x.id!==t.id);save();renderTasks();renderDashboard();}},"✕");
@@ -738,8 +651,7 @@ function taskItem(bu,t){
   const note=el("div",{class:"ti-note",contenteditable:"true",spellcheck:"false",text:t.note||""});
   const se=()=>note.classList.toggle("empty",note.textContent.trim()===""); se();
   note.addEventListener("input",()=>{t.note=note.textContent;se();save();});
-  const cat=catSelect(t.subject,v=>{t.subject=v;chip.textContent=v||"?";save();renderDashboard();});
-  details.appendChild(el("div",{class:"meta"},cat,st,pr,owner,due));
+  details.appendChild(el("div",{class:"meta"},st,pr,owner,due));
   details.appendChild(note);
   if(t.archived) details.appendChild(el("button",{class:"btn small ghost",style:"margin-top:6px",onClick:()=>{t.archived=false;t.status="Not started";save();renderTasks();renderDashboard();}},"↩ Restore"));
   item.appendChild(el("div",{class:"l1"},chk,title,chip,chev,del));
@@ -749,18 +661,18 @@ function taskItem(bu,t){
 function tasksCol(bu){
   const col=el("div",{class:"bu-col"}); col.appendChild(colHead(bu));
   const tin=el("input",{type:"text",placeholder:"New task…"});
-  const scat=catSelect("?",()=>{});
+  const sin=el("input",{type:"text",placeholder:"Subject"});
   const oin=el("input",{type:"text",placeholder:"Owner"});
   const din=el("input",{type:"date"});
   const pin=el("select"); ["Very High","High","Medium","Low"].forEach(p=>pin.appendChild(el("option",{text:p}))); pin.value="Medium";
   const nin=el("input",{type:"text",placeholder:"Note (optional)"});
   const add=()=>{ const v=tin.value.trim(); if(!v)return;
-    bu.data.tasks.push({id:uid(),title:v,subject:scat.value||"?",owner:oin.value.trim(),status:"Not started",priority:pin.value,due:din.value,note:nin.value.trim(),archived:false});
+    bu.data.tasks.push({id:uid(),title:v,subject:sin.value.trim()||"",owner:oin.value.trim(),status:"Not started",priority:pin.value,due:din.value,note:nin.value.trim(),archived:false});
     save();renderTasks();renderDashboard(); };
-  [tin,oin,nin].forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")add();}));
+  [tin,sin,oin,nin].forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")add();}));
   col.appendChild(el("div",{class:"card add-card"},
     tin,
-    el("div",{class:"add-grid"},scat,oin,din,pin),
+    el("div",{class:"add-grid"},sin,oin,din,pin),
     nin,
     el("div",{style:"text-align:right"}, el("button",{class:"btn primary small",onClick:add},"Add task"))));
   const active=bu.data.tasks.filter(t=>!t.archived)
@@ -781,174 +693,64 @@ function tasksCol(bu){
 }
 function renderTasks(){ const c=$("#cols-tasks"); c.innerHTML=""; BUS.forEach(bu=>c.appendChild(tasksCol(bu))); }
 
-/* ---------- LEAD SOURCES ---------- */
-const LEAD_FIELDS={
-  TSP:[
-    {k:"name",label:"Lead source name"},
-    {k:"company",label:"Company"},
-    {k:"role",label:"Role"},
-    {k:"manager",label:"Manager"},
-    {k:"managerUp1",label:"Manager Up1"},
-    {k:"managerUp2",label:"Manager Up2"},
-    {k:"trainingsNeeded",label:"Trainings Needed",type:"area"},
-    {k:"providesTraining",label:"WutzNxt provides the training",type:"check"}
-  ],
-  SI:[
-    {k:"name",label:"Lead source name"},
-    {k:"company",label:"Company"},
-    {k:"role",label:"Role"},
-    {k:"contact",label:"WutzNxt contact"},
-    {k:"siNeeds",label:"SI needs",type:"area"}
-  ],
-  ISV:[
-    {k:"product",label:"WutzNxt product"},
-    {k:"name",label:"Lead source name"},
-    {k:"company",label:"Company"},
-    {k:"role",label:"Role"},
-    {k:"contact",label:"WutzNxt contact"}
-  ]
-};
-const GC_FIELDS=[{k:"name",label:"Name"},{k:"company",label:"Company"},{k:"role",label:"Role"},{k:"notes",label:"Notes",type:"area"}];
-const MS_LOGO='<svg viewBox="0 0 20 20" width="16" height="16" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="9" height="9" fill="#F25022"/><rect x="11" y="0" width="9" height="9" fill="#7FBA00"/><rect x="0" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>';
-function companyLogo(company){
-  const c=(company||"").toLowerCase();
-  if(c.indexOf("microsoft")>=0) return el("span",{class:"co-logo",html:MS_LOGO});
-  const letter=((company||"").trim().charAt(0)||"?").toUpperCase();
-  return el("span",{class:"co-avatar",text:letter});
-}
-function statusBubble(n){ n=Math.max(1,Math.min(5,+n||1));
-  const cls=n>=4?"st-green":n>=2?"st-yellow":"st-grey";
-  return el("span",{class:"lead-status "+cls,text:"★".repeat(n)+"☆".repeat(5-n)});
-}
-function starEditor(get,onset){
-  const wrap=el("span",{class:"star-edit"});
-  function draw(){ wrap.innerHTML=""; const n=get()||1;
-    for(let i=1;i<=5;i++){ const s=el("span",{class:"star",text:i<=n?"★":"☆"});
-      s.addEventListener("click",()=>{onset(i);draw();}); wrap.appendChild(s); } }
-  draw(); return wrap;
-}
-function entryRow(ent,fields,arr,after){
-  const item=el("div",{class:"lead-item"});
-  const details=el("div",{class:"lead-details"});
-  const isOpen=(ent.id===leadOpen);
-  details.style.display=isOpen?"block":"none";
-  const chev=el("button",{class:"ti-chev"+(isOpen?" open":""),title:"Show details",onClick:()=>{const o=details.style.display==="none";details.style.display=o?"block":"none";chev.classList.toggle("open",o);}},"▸");
-  const nameEl=el("span",{class:"lead-name",text:ent.name||"(no name)"});
-  const roleEl=el("span",{class:"lead-role",text:ent.role||""});
-  let logoEl=companyLogo(ent.company);
-  let statusEl=statusBubble(ent.status);
-  const l1=el("div",{class:"l1"},chev,logoEl,nameEl,roleEl,statusEl);
-  fields.forEach(f=>{
-    if(f.type==="check"){
-      const cb=el("input",{type:"checkbox"}); cb.checked=!!ent[f.k];
-      cb.addEventListener("change",()=>{ent[f.k]=cb.checked;save();});
-      details.appendChild(el("label",{class:"lead-check"},cb,el("span",{text:f.label})));
-    }else if(f.type==="area"){
-      const ta=el("textarea",{class:"lead-ta"}); ta.value=ent[f.k]||"";
-      ta.addEventListener("input",()=>{ent[f.k]=ta.value;save();});
-      details.appendChild(el("div",{class:"fld"},el("label",{class:"fld-l",text:f.label}),ta));
-    }else{
-      const inp=textInput(()=>ent[f.k],v=>{ ent[f.k]=v;
-        if(f.k==="name")nameEl.textContent=v||"(no name)";
-        else if(f.k==="role")roleEl.textContent=v||"";
-        else if(f.k==="company"){const nl=companyLogo(v);l1.replaceChild(nl,logoEl);logoEl=nl;}
-      },f.label);
-      details.appendChild(el("div",{class:"fld"},el("label",{class:"fld-l",text:f.label}),inp));
-    }
-  });
-  details.appendChild(el("div",{class:"fld"},el("label",{class:"fld-l",text:"Status (1–5 stars)"}),
-    starEditor(()=>ent.status||1, v=>{ ent.status=v; const ns=statusBubble(v); l1.replaceChild(ns,statusEl); statusEl=ns; save(); })));
-  details.appendChild(el("button",{class:"del",style:"margin-top:6px;font-size:12px",onClick:()=>{const i=arr.indexOf(ent);if(i>=0)arr.splice(i,1);save();after();}},"✕ Delete"));
-  item.appendChild(l1); item.appendChild(details);
-  return item;
-}
-function leadRow(bu,ent){ return entryRow(ent,LEAD_FIELDS[bu.key],bu.data.leads,renderLeads); }
-function leadsCol(bu){
-  const col=el("div",{class:"bu-col"}); col.appendChild(colHead(bu));
-  const card=el("div",{class:"card"}); card.appendChild(el("h3",{text:"Lead Sources"}));
-  card.appendChild(el("button",{class:"btn primary small",style:"margin-bottom:10px",onClick:()=>{const id=uid();bu.data.leads.push({id,name:"",company:"",role:"",status:1});leadOpen=id;save();renderLeads();}},"+ Add lead source"));
-  if(bu.data.leads.length===0) card.appendChild(el("div",{class:"empty-state",text:"No lead sources yet."}));
-  bu.data.leads.forEach(ent=>card.appendChild(leadRow(bu,ent)));
-  col.appendChild(card); return col;
-}
-function renderLeads(){
-  const c=$("#cols-leads"); c.className="lead-wrap"; c.innerHTML="";
-  const grid=el("div",{class:"cols"}); BUS.forEach(bu=>grid.appendChild(leadsCol(bu))); c.appendChild(grid);
-  const card=el("div",{class:"card"}); card.appendChild(el("h3",{text:"General Contacts"}));
-  card.appendChild(el("button",{class:"btn primary small",style:"margin-bottom:10px",onClick:()=>{const id=uid();state.generalContacts.push({id,name:"",company:"",role:"",notes:"",status:1});leadOpen=id;save();renderLeads();}},"+ Add contact"));
-  if(!state.generalContacts.length) card.appendChild(el("div",{class:"empty-state",text:"No contacts yet."}));
-  state.generalContacts.forEach(item=>card.appendChild(entryRow(item,GC_FIELDS,state.generalContacts,renderLeads)));
-  c.appendChild(card);
-}
-
-/* ---------- TRAINING LINKS ---------- */
-function linkRow(item,arr,after){
-  const row=el("div",{class:"link-row"});
+/* ---------- LEAD SOURCES (submit + editable list) ---------- */
+function leadRow(bu,ent){
+  const row=el("div",{class:"lead-row"});
   function view(){ row.innerHTML="";
-    row.appendChild(el("a",{href:item.url||"#",target:"_blank",rel:"noopener",class:"link-a",text:item.title||item.url||"(untitled)"}));
+    const meta=[ent.contact?"WutzNxt: "+ent.contact:"",ent.sub?"Subs: "+ent.sub:"",ent.types?"Types: "+ent.types:""].filter(Boolean).join("  ·  ");
+    row.appendChild(el("div",{class:"lr-main"},
+      el("div",{class:"lr-title",text:(ent.name||"(no name)")+(ent.company?" — "+ent.company:"")}),
+      meta?el("div",{class:"lr-meta",text:meta}):null));
     row.appendChild(el("div",{class:"lr-acts"},
       el("button",{class:"btn small ghost",onClick:edit},"Edit"),
-      el("button",{class:"del",onClick:()=>{const i=arr.indexOf(item);if(i>=0)arr.splice(i,1);save();after();}},"✕")));
+      el("button",{class:"del",onClick:()=>{bu.data.leads=bu.data.leads.filter(x=>x.id!==ent.id);save();renderLeads();}},"✕")));
   }
   function edit(){ row.innerHTML="";
-    const t=el("input",{type:"text",value:item.title||"",placeholder:"Title"});
-    const u=el("input",{type:"text",value:item.url||"",placeholder:"https://…"});
-    const done=()=>{item.title=t.value.trim();item.url=u.value.trim();save();view();};
-    [t,u].forEach(x=>x.addEventListener("keydown",e=>{if(e.key==="Enter")done();}));
-    row.appendChild(el("div",{class:"link-edit"},t,u,el("button",{class:"btn primary small",onClick:done},"Save")));
+    const mk=(k,ph)=>{const i=el("input",{type:"text",value:ent[k]||"",placeholder:ph});i.dataset.k=k;i.addEventListener("keydown",e=>{if(e.key==="Enter")done();});return i;};
+    const ins=[mk("name","Lead source name"),mk("company","Company"),mk("contact","WutzNxt contact"),mk("sub","Sub-lead sources"),mk("types","Training types")];
+    function done(){ ins.forEach(i=>ent[i.dataset.k]=i.value.trim()); save(); view(); }
+    row.appendChild(el("div",{class:"lead-add",style:"width:100%;margin:0"},...ins,el("button",{class:"btn primary small",onClick:done},"Save")));
   }
   view(); return row;
 }
-function renderTraining(){
-  const c=$("#cols-training"); c.innerHTML="";
-  const card=el("div",{class:"card",style:"max-width:820px"}); card.appendChild(el("h3",{text:"Training Links"}));
-  const t=el("input",{type:"text",placeholder:"Title"});
-  const u=el("input",{type:"text",placeholder:"https://…"});
-  const add=()=>{ if(!t.value.trim()&&!u.value.trim())return; state.trainingLinks.push({id:uid(),title:t.value.trim(),url:u.value.trim()}); save(); renderTraining(); };
-  [t,u].forEach(x=>x.addEventListener("keydown",e=>{if(e.key==="Enter")add();}));
-  card.appendChild(el("div",{class:"link-edit"},t,u,el("button",{class:"btn primary small",onClick:add},"Add")));
-  if(!state.trainingLinks.length) card.appendChild(el("div",{class:"empty-state",text:"No links yet."}));
-  state.trainingLinks.forEach(item=>card.appendChild(linkRow(item,state.trainingLinks,renderTraining)));
-  c.appendChild(card);
+function leadsCol(bu){
+  const col=el("div",{class:"bu-col"}); col.appendChild(colHead(bu));
+  const card=el("div",{class:"card"}); card.appendChild(el("h3",{text:"Lead Sources"}));
+  const inName=el("input",{type:"text",placeholder:"Lead source name"});
+  const inCo=el("input",{type:"text",placeholder:"Company"});
+  const inCon=el("input",{type:"text",placeholder:"WutzNxt contact"});
+  const inSub=el("input",{type:"text",placeholder:"Sub-lead sources"});
+  const inTypes=el("input",{type:"text",placeholder:"Training types"});
+  const addEntry=()=>{ if(!inName.value.trim()&&!inCo.value.trim())return;
+    bu.data.leads.push({id:uid(),name:inName.value.trim(),company:inCo.value.trim(),contact:inCon.value.trim(),sub:inSub.value.trim(),types:inTypes.value.trim()});
+    save(); renderLeads(); };
+  const inputs=[inName,inCo,inCon,inSub,inTypes];
+  inputs.forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")addEntry();}));
+  card.appendChild(el("div",{class:"lead-add"},...inputs,el("button",{class:"btn primary small",onClick:addEntry},"Add")));
+  if(bu.data.leads.length===0) card.appendChild(el("div",{class:"empty-state",text:"No lead sources yet — fill the fields and press Enter."}));
+  bu.data.leads.forEach(ent=>card.appendChild(leadRow(bu,ent)));
+  col.appendChild(card); return col;
 }
+function renderLeads(){ const c=$("#cols-leads"); c.innerHTML=""; BUS.forEach(bu=>c.appendChild(leadsCol(bu))); }
 
 /* ---------- PLAN ---------- */
-function chipList(items){
-  const wrap=el("div",{class:"chips"});
-  function redraw(){ wrap.innerHTML="";
-    items.forEach((v,i)=>wrap.appendChild(el("span",{class:"chip"},el("span",{text:v}),
-      el("button",{class:"chip-x",onClick:()=>{items.splice(i,1);save();redraw();}},"×"))));
-    const inp=el("input",{class:"chip-input",type:"text",placeholder:"Add…"});
-    inp.addEventListener("keydown",e=>{ if(e.key==="Enter"&&inp.value.trim()){ items.push(inp.value.trim()); save(); redraw(); const ni=wrap.querySelector(".chip-input"); if(ni)ni.focus(); } });
-    wrap.appendChild(inp);
-  }
-  redraw(); return wrap;
-}
-function planCard(bu,sec){
-  const titleEl=el("div",{class:"plan-title",contenteditable:"true",spellcheck:"false","data-ph":"Section title",text:sec.title});
-  const ts=()=>titleEl.classList.toggle("empty",titleEl.textContent.trim()===""); ts();
-  titleEl.addEventListener("input",()=>{sec.title=titleEl.textContent;ts();save();});
-  const del=el("button",{class:"del",title:"Delete section",onClick:()=>{bu.data.plan=bu.data.plan.filter(x=>x.id!==sec.id);save();renderPlan();}},"✕");
-  let bodyNode;
-  if(sec.type==="chips"){ if(!Array.isArray(sec.items))sec.items=[]; bodyNode=chipList(sec.items); }
-  else{
+function planCol(bu){
+  const col=el("div",{class:"bu-col"}); col.appendChild(colHead(bu));
+  bu.data.plan.forEach(sec=>{
+    const titleEl=el("div",{class:"plan-title",contenteditable:"true",spellcheck:"false","data-ph":"Section title",text:sec.title});
+    const ts=()=>titleEl.classList.toggle("empty",titleEl.textContent.trim()===""); ts();
+    titleEl.addEventListener("input",()=>{sec.title=titleEl.textContent;ts();save();});
+    const del=el("button",{class:"del",title:"Delete section",onClick:()=>{bu.data.plan=bu.data.plan.filter(x=>x.id!==sec.id);save();renderPlan();}},"✕");
     const ed=el("div",{class:"editable",contenteditable:"true",spellcheck:"false","data-ph":"Add details…"});
     ed.innerHTML=sec.body||"";
     const se=()=>ed.classList.toggle("empty",ed.textContent.trim()===""); se();
     ed.addEventListener("input",()=>{sec.body=ed.innerHTML;se();save();});
-    bodyNode=ed;
-  }
-  return el("div",{class:"card"},el("div",{class:"mc-head"},titleEl,del),bodyNode);
+    col.appendChild(el("div",{class:"card"},el("div",{class:"mc-head"},titleEl,del),ed));
+  });
+  col.appendChild(el("button",{class:"btn small ghost",onClick:()=>{bu.data.plan.push({id:uid(),title:"New section",body:""});save();renderPlan();}},"+ Add section"));
+  return col;
 }
-function renderPlan(){
-  const c=$("#cols-plan"); c.innerHTML="";
-  BUS.forEach(bu=>c.appendChild(colHead(bu)));
-  const maxLen=Math.max(0,...BUS.map(bu=>bu.data.plan.length));
-  for(let i=0;i<maxLen;i++){
-    BUS.forEach(bu=>{ const sec=bu.data.plan[i]; c.appendChild(sec?planCard(bu,sec):el("div")); });
-  }
-  BUS.forEach(bu=>c.appendChild(el("button",{class:"btn small ghost",onClick:()=>{bu.data.plan.push({id:uid(),title:"New section",type:"text",body:""});save();renderPlan();}},"+ Add section")));
-}
+function renderPlan(){ const c=$("#cols-plan"); c.innerHTML=""; BUS.forEach(bu=>c.appendChild(planCol(bu))); }
 
 /* ---------- NOTES ---------- */
 function notesCol(bu){
@@ -960,63 +762,10 @@ function notesCol(bu){
 }
 function renderNotes(){ const c=$("#cols-notes"); c.innerHTML=""; BUS.forEach(bu=>c.appendChild(notesCol(bu))); }
 
-/* ---------- PEOPLE RESOURCES (placeholder) ---------- */
-function renderPeople(){ const c=$("#cols-people"); c.innerHTML="";
-  c.appendChild(el("div",{class:"card",style:"max-width:820px"},
-    el("h3",{text:"People Resources"}),
-    el("div",{class:"empty-state",text:"Coming soon — tell Claude how you'd like this tab set up."})));
-}
-
-/* ---------- SOWs ---------- */
-const SOW_STATES=[
-  {v:"Contracted & active", bg:"#166534", fg:"#ffffff"},
-  {v:"Contract signed",     bg:"#22c55e", fg:"#06280f"},
-  {v:"In discussion",       bg:"#7a5af8", fg:"#ffffff"},
-  {v:"Potential (inactive)",bg:"#eab308", fg:"#3a2f00"},
-  {v:"Not likely",          bg:"#b42318", fg:"#ffffff"}
-];
-function sowColor(v){ return SOW_STATES.find(x=>x.v===v)||SOW_STATES[2]; }
-function sowPill(v){ const s=sowColor(v); return el("span",{class:"sow-pill",style:"background:"+s.bg+";color:"+s.fg,text:v}); }
-function sowStatusSelect(cur,onChange){ const sel=el("select"); SOW_STATES.forEach(s=>sel.appendChild(el("option",{text:s.v}))); sel.value=cur||"In discussion"; sel.addEventListener("change",()=>onChange(sel.value)); return sel; }
-function sowLegend(){ const w=el("div",{class:"sow-legend"}); SOW_STATES.forEach(s=>w.appendChild(el("span",{class:"sow-pill",style:"background:"+s.bg+";color:"+s.fg,text:s.v}))); return w; }
-function fld(label,node){ return el("div",{class:"fld"},el("label",{class:"fld-l",text:label}),node); }
-function sowRow(sow){
-  const item=el("div",{class:"lead-item"});
-  const details=el("div",{class:"lead-details"}); const isOpen=(sow.id===leadOpen); details.style.display=isOpen?"block":"none";
-  const chev=el("button",{class:"ti-chev"+(isOpen?" open":""),title:"Show details",onClick:()=>{const o=details.style.display==="none";details.style.display=o?"block":"none";chev.classList.toggle("open",o);}},"▸");
-  let logoEl=companyLogo(sow.company);
-  const titleEl=el("span",{class:"lead-name",style:"flex:1",text:(sow.company?sow.company+" — ":"")+(sow.title||"(untitled)")});
-  let pill=sowPill(sow.status);
-  const l1=el("div",{class:"l1"},chev,logoEl,titleEl,pill);
-  const refreshTitle=()=>{ titleEl.textContent=(sow.company?sow.company+" — ":"")+(sow.title||"(untitled)"); };
-  details.appendChild(fld("Company", textInput(()=>sow.company,v=>{sow.company=v;const nl=companyLogo(v);l1.replaceChild(nl,logoEl);logoEl=nl;refreshTitle();})));
-  details.appendChild(fld("Stakeholders", chipList(sow.stakeholders)));
-  details.appendChild(fld("Title", textInput(()=>sow.title,v=>{sow.title=v;refreshTitle();})));
-  const ta=el("textarea",{class:"lead-ta"}); ta.value=sow.description||""; ta.addEventListener("input",()=>{sow.description=ta.value;save();});
-  details.appendChild(fld("Description", ta));
-  const d=el("input",{type:"date",value:sow.startDate||""}); d.addEventListener("input",()=>{sow.startDate=d.value;save();});
-  details.appendChild(fld("Target start date", d));
-  details.appendChild(fld("Length (months)", numInput(()=>sow.lengthMonths,v=>{sow.lengthMonths=v;},{step:1})));
-  details.appendChild(fld("# of people", numInput(()=>sow.people,v=>{sow.people=v;},{step:1})));
-  details.appendChild(fld("Status", sowStatusSelect(sow.status,v=>{sow.status=v;const np=sowPill(v);l1.replaceChild(np,pill);pill=np;save();})));
-  details.appendChild(el("button",{class:"del",style:"margin-top:6px;font-size:12px",onClick:()=>{const i=state.sows.indexOf(sow);if(i>=0)state.sows.splice(i,1);save();renderSOWs();}},"✕ Delete SOW"));
-  item.appendChild(l1); item.appendChild(details);
-  return item;
-}
-function renderSOWs(){
-  const c=$("#cols-sows"); c.innerHTML="";
-  const card=el("div",{class:"card",style:"max-width:920px"}); card.appendChild(el("h3",{text:"Statements of Work (SOWs)"}));
-  card.appendChild(el("button",{class:"btn primary small",style:"margin-bottom:10px",onClick:()=>{const id=uid();state.sows.push({id,company:"",stakeholders:[],title:"",description:"",startDate:"",lengthMonths:0,people:0,status:"In discussion"});leadOpen=id;save();renderSOWs();}},"+ Add SOW"));
-  card.appendChild(sowLegend());
-  if(!state.sows.length) card.appendChild(el("div",{class:"empty-state",text:"No SOWs yet."}));
-  state.sows.forEach(s=>card.appendChild(sowRow(s)));
-  c.appendChild(card);
-}
-
 /* ---------- dispatch ---------- */
 function renderTab(name){
   ({dashboard:renderDashboard,financials:renderFinancials,tasks:renderTasks,
-    leads:renderLeads,training:renderTraining,plan:renderPlan,notes:renderNotes,people:renderPeople,sows:renderSOWs}[name])();
+    leads:renderLeads,plan:renderPlan,notes:renderNotes}[name])();
 }
 
 /* ---------- import / export ---------- */
@@ -1077,7 +826,7 @@ async function initCloud(){
 
 /* ---------- init ---------- */
 runArchive();
-renderTab("plan");
+renderTab("dashboard");
 initCloud();
 </script>
 </body>
