@@ -116,6 +116,7 @@ td.editcell input:focus{border-color:var(--accent);outline:none}
 .chip-x:hover{color:var(--red)}
 .chip-input{border:1px dashed var(--line);border-radius:99px;padding:3px 10px;font-size:12px;min-width:90px;flex:1}
 .chip-input:focus{border-color:var(--accent);outline:none}
+.chip-sel{border:1px solid var(--accent);color:var(--accent);border-radius:99px;padding:3px 26px 3px 12px;font-size:12px;background-color:var(--accent-soft);cursor:pointer;font-weight:600}
 .lead-wrap{display:flex;flex-direction:column;gap:14px}
 .link-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
 .link-row:last-child{border-bottom:none}
@@ -234,7 +235,7 @@ select.s-Highest{color:var(--red);background:var(--red-soft);font-weight:650}
 .pbub.lead{background:var(--accent-soft);color:var(--accent)}
 .pg-empty{color:#aab2bd;font-size:12px}
 .pg-editor{grid-column:1/-1;padding:8px 2px 16px;border-bottom:1px solid var(--line);background:#fbfcfd;border-radius:0 0 8px 8px}
-.people-grid .ti-chev{font-size:42px;padding:0 6px}
+.people-grid .ti-chev{font-size:42px;padding:0 6px;line-height:1;display:flex;align-items:center}
 
 textarea.notes{width:100%;min-height:240px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;resize:vertical}
 .empty-state{color:var(--muted);font-style:italic;padding:8px 2px;font-size:12.5px}
@@ -953,20 +954,23 @@ function allSubjects(){
   allTrainings().forEach(x=>s.add(x));
   return [...s].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase()));
 }
-/* chip editor with a dropdown of existing values (datalist) so nobody re-types a duplicate */
+/* chip editor: a visible dropdown of existing values (pick one to add) + a box to type a brand-new one */
 function chipListSug(items,getSug){
   const wrap=el("div",{class:"chips"});
-  const dlId="dl_"+uid();
   function redraw(){ wrap.innerHTML="";
     items.forEach((v,i)=>wrap.appendChild(el("span",{class:"chip"},el("span",{text:v}),
       el("button",{class:"chip-x",onClick:()=>{items.splice(i,1);save();redraw();}},"×"))));
-    const dl=el("datalist",{id:dlId});
-    getSug().filter(s=>items.indexOf(s)<0).forEach(s=>dl.appendChild(el("option",{value:s})));
-    const inp=el("input",{class:"chip-input",type:"text",placeholder:"Pick existing or add new…",list:dlId,autocomplete:"off"});
-    const commit=()=>{ const val=inp.value.trim(); if(!val)return; if(items.indexOf(val)<0){items.push(val);save();} redraw(); const ni=wrap.querySelector(".chip-input"); if(ni)ni.focus(); };
-    inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); commit(); } });
-    inp.addEventListener("change",()=>{ if(getSug().indexOf(inp.value.trim())>=0) commit(); });
-    wrap.appendChild(dl); wrap.appendChild(inp);
+    const sug=getSug().filter(s=>items.indexOf(s)<0);
+    if(sug.length){
+      const sel=el("select",{class:"chip-sel"});
+      sel.appendChild(el("option",{value:"",text:"▾ Pick existing…"}));
+      sug.forEach(s=>sel.appendChild(el("option",{value:s,text:s})));
+      sel.addEventListener("change",()=>{ const v=sel.value; if(v){ if(items.indexOf(v)<0){items.push(v);save();} redraw(); } });
+      wrap.appendChild(sel);
+    }
+    const inp=el("input",{class:"chip-input",type:"text",placeholder:sug.length?"or type new + Enter":"Type + Enter to add"});
+    inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); const val=inp.value.trim(); if(!val)return; if(items.indexOf(val)<0){items.push(val);save();} redraw(); const ni=wrap.querySelector(".chip-input"); if(ni)ni.focus(); } });
+    wrap.appendChild(inp);
   }
   redraw(); return wrap;
 }
