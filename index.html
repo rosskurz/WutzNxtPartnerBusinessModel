@@ -153,9 +153,10 @@ td.editcell input:focus{border-color:var(--accent);outline:none}
 .add-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .add-grid input,.add-grid select{border:1px solid var(--line);border-radius:7px;padding:6px 7px;font-size:12px;width:100%}
 
-.task-item{border-top:1px solid var(--line);padding:9px 0}
-.task-item:first-child{border-top:none;padding-top:2px}
+.task-item{border-top:1px solid var(--line);padding:3px 0}
+.task-item:first-child{border-top:none;padding-top:1px}
 .task-item .l1{display:flex;align-items:center;gap:7px}
+.pri-cell .card{padding:6px 10px}
 .task-item .ti-title{flex:1;font-weight:550;border:1px solid transparent;border-radius:6px;padding:3px 5px;margin:-3px -5px;outline:none;min-width:0}
 .task-item .ti-title:focus{border-color:var(--accent)}
 .task-item.done .ti-title{text-decoration:line-through;color:var(--muted)}
@@ -179,7 +180,7 @@ select.s-Highest{color:var(--red);background:var(--red-soft);font-weight:650}
 .ti-chev{flex:none;border:none;background:none;color:var(--muted);font-size:12px;line-height:1;padding:3px 5px;border-radius:6px;transition:transform .15s}
 .ti-chev.open{transform:rotate(90deg)}
 .ti-chev:hover{background:var(--grey-soft)}
-.task-item .ti-chev{font-size:42px;padding:0 6px}
+.task-item .ti-chev{font-size:22px;padding:0 4px;line-height:1;display:flex;align-items:center}
 .owner-chip{background:var(--accent-soft);color:var(--accent);font-weight:600}
 .task-item .ti-title.overdue{color:var(--red)}
 .pri-header{grid-column:1/-1;font-size:13px;font-weight:700;letter-spacing:.02em;padding:7px 11px;border-radius:8px;margin-top:8px}
@@ -634,7 +635,7 @@ function highestBox(bu){
   return metricCard(bu,"Highest Priority Open Tasks","tasks","task list",body);
 }
 
-/* ---------- DASHBOARD (row-major so categories line up across columns) ---------- */
+/* ---------- DASHBOARD (removed tab; guarded no-op) ---------- */
 function renderDashboard(){
   const c=$("#cols-dashboard"); if(!c)return; c.innerHTML="";
   const rows=[
@@ -795,7 +796,7 @@ function renderFinancials(){
   update();
 }
 
-/* ---------- TASKS (sorted by priority) ---------- */
+/* ---------- TASKS (grouped by priority, aligned across columns) ---------- */
 const PRI_ORDER={"Very High":0,High:1,Medium:2,Low:3};
 const CATEGORIES=["Biz Model","Setup","Mkting","Ops","Leads","Team","Finance","?"];
 function catSelect(cur,onChange){
@@ -811,7 +812,6 @@ function taskItem(bu,t){
   chk.addEventListener("change",()=>{t.status=chk.checked?"Done":"Not started";save();renderTasks();renderDashboard();});
   const title=el("div",{class:"ti-title"+(isOverdue(t)?" overdue":""),contenteditable:"true",spellcheck:"false",text:t.title});
   title.addEventListener("input",()=>{t.title=title.textContent;save();});
-  const chip=el("span",{class:"subj-chip",text:t.subject||"?"});
   const ownerChip=el("span",{class:"subj-chip owner-chip",text:t.owner||"—"});
   const details=el("div",{class:"ti-details"}); details.style.display="none";
   const chev=el("button",{class:"ti-chev",title:"Show details",onClick:()=>{const o=details.style.display==="none";details.style.display=o?"block":"none";chev.classList.toggle("open",o);}},"▸");
@@ -827,11 +827,11 @@ function taskItem(bu,t){
   const note=el("div",{class:"ti-note",contenteditable:"true",spellcheck:"false",text:t.note||""});
   const se=()=>note.classList.toggle("empty",note.textContent.trim()===""); se();
   note.addEventListener("input",()=>{t.note=note.textContent;se();save();});
-  const cat=catSelect(t.subject,v=>{t.subject=v;chip.textContent=v||"?";save();renderDashboard();});
+  const cat=catSelect(t.subject,v=>{t.subject=v;save();renderDashboard();});
   details.appendChild(el("div",{class:"meta"},cat,st,pr,owner,due));
   details.appendChild(note);
   if(t.archived) details.appendChild(el("button",{class:"btn small ghost",style:"margin-top:6px",onClick:()=>{t.archived=false;t.status="Not started";save();renderTasks();renderDashboard();}},"↩ Restore"));
-  item.appendChild(el("div",{class:"l1"},chev,chk,title,chip,ownerChip,del));
+  item.appendChild(el("div",{class:"l1"},chev,chk,title,ownerChip,del));
   item.appendChild(details);
   return item;
 }
@@ -875,7 +875,7 @@ function renderTasks(){
   const c=$("#cols-tasks"); c.className="cols"; c.innerHTML="";
   BUS.forEach(bu=>c.appendChild(taskHeadCell(bu)));
   PRIS.forEach(P=>{
-    c.appendChild(el("div",{class:"pri-header pri-"+P.replace(/\s/g,""),text:P}));
+    if(!BUS.some(bu=>bu.data.tasks.some(t=>!t.archived && (t.priority||"Medium")===P))) return;
     BUS.forEach(bu=>c.appendChild(priCell(bu,t=>!t.archived && (t.priority||"Medium")===P)));
   });
   if(BUS.some(bu=>bu.data.tasks.some(t=>t.archived))){
@@ -1121,7 +1121,7 @@ function renderPlan(){
   c.appendChild(el("button",{class:"btn small ghost",style:"grid-column:1/-1;justify-self:start",onClick:()=>{ BUS.forEach(bu=>bu.data.plan.push({id:uid(),title:"New section",type:"text",body:""})); save(); renderPlan(); }},"+ Add section (all columns)"));
 }
 
-/* ---------- NOTES ---------- */
+/* ---------- NOTES (removed tab; guarded no-op) ---------- */
 function notesCol(bu){
   const col=el("div",{class:"bu-col"}); col.appendChild(colHead(bu));
   const ta=el("textarea",{class:"notes",placeholder:"Notes from working sessions…"}); ta.value=bu.data.notes||"";
