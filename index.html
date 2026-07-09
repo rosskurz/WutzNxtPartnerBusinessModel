@@ -549,7 +549,7 @@ let saveT;
 function save(){ clearTimeout(saveT); state.ts=Date.now(); $("#saveChip").textContent="Saving…"; $("#saveChip").className="savechip";
   saveT=setTimeout(()=>{ try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
     try{takeSnapshot("edit");}catch(e){}
-    if(typeof SB_URL!=="undefined"&&SB_URL){ cloudSave(state).then(()=>{$("#saveChip").textContent="Synced ✓";$("#saveChip").className="savechip";}).catch(()=>{$("#saveChip").textContent="⚠ NOT saved to cloud";$("#saveChip").className="savechip warn";}); }
+    if(typeof SB_URL!=="undefined"&&SB_URL){ if(!cloudReady){ $("#saveChip").textContent="Saved locally (loading cloud…)"; $("#saveChip").className="savechip"; return; } cloudSave(state).then(()=>{$("#saveChip").textContent="Synced ✓";$("#saveChip").className="savechip";}).catch(()=>{$("#saveChip").textContent="⚠ NOT saved to cloud";$("#saveChip").className="savechip warn";}); }
     else $("#saveChip").textContent="Saved";
   },400); }
 
@@ -1417,17 +1417,16 @@ async function pollCloud(){
 async function initCloud(){
   try{
     const d=await cloudLoad();
+    cloudReady=true;                                                 /* cloud confirmed loaded — only now is it safe to write */
     if(d&&d.bu){ lastCloudJSON=JSON.stringify(d); applyRemote(d); }  /* cloud has data → ALWAYS load it; never overwrite the cloud on page load */
-    else { await cloudSave(state); }                                 /* cloud is empty → seed it once */
+    else { await cloudSave(state); }                                 /* cloud is genuinely empty → seed it once */
     seedAMI();                                                        /* add AMI team to TSP leads once */
-    cloudReady=true;
     $("#saveChip").textContent="Synced ✓"; $("#saveChip").className="savechip";
     setInterval(pollCloud,15000);
-  }catch(e){ $("#saveChip").textContent="⚠ Cloud offline (local only)"; $("#saveChip").className="savechip warn"; }
+  }catch(e){ $("#saveChip").textContent="⚠ Cloud offline — not saved, reload"; $("#saveChip").className="savechip warn"; }
 }
 
-/* ---------- init ---------- */
-runArchive();
+/* ---------- init (do NOT write to cloud before it has loaded) ---------- */
 renderTab("sows");
 try{takeSnapshot("Load",{force:true});}catch(e){}
 initCloud();
