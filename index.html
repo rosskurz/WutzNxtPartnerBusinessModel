@@ -224,18 +224,29 @@ select.s-Highest{color:var(--red);background:var(--red-soft);font-weight:650}
 .lead-check{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:13px}
 .star-edit .star{cursor:pointer;font-size:17px;color:#e0a400;letter-spacing:2px}
 
-.people-grid{display:grid;grid-template-columns:minmax(150px,1.1fr) 2fr 2fr 2fr;align-items:start;column-gap:16px}
-.pg-head{font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);font-weight:650;padding:6px 2px 8px;border-bottom:2px solid var(--line)}
+.people-grid{display:grid;grid-template-columns:minmax(150px,1.1fr) 2fr 2fr 2fr;align-items:stretch;column-gap:16px}
+.pg-head{font-size:16px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);font-weight:650;padding:6px 2px 8px;border-bottom:2px solid var(--line)}
 .pg-cell{padding:10px 2px;border-bottom:1px solid var(--line);min-width:0}
-.pg-name{display:flex;align-items:center;gap:6px;font-weight:600;min-width:0}
-.pg-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pg-name{display:flex;align-items:flex-start;gap:6px;font-weight:600;min-width:0}
+.pg-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-top:1px}
 .pg-bubbles{display:flex;flex-wrap:wrap;gap:5px}
 .pbub{border-radius:99px;padding:2px 10px;font-size:11.5px;background:var(--grey-soft);color:var(--ink)}
 .pbub.cert{background:var(--green-soft);color:var(--green);font-weight:600}
 .pbub.lead{background:var(--accent-soft);color:var(--accent)}
 .pg-empty{color:#aab2bd;font-size:12px}
 .pg-editor{grid-column:1/-1;padding:8px 2px 16px;border-bottom:1px solid var(--line);background:#fbfcfd;border-radius:0 0 8px 8px}
-.people-grid .ti-chev{font-size:42px;padding:0 6px;line-height:1;display:flex;align-items:center}
+.people-grid .ti-chev{font-size:22px;padding:0 4px;line-height:1;display:flex;align-items:center}
+.lead-bu-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.lead-bu-tabs button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 20px;font-weight:600;font-size:13px;color:var(--muted);cursor:pointer}
+.lead-bu-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lead-grid{display:grid;align-items:stretch;column-gap:10px}
+.lg-head{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);font-weight:650;padding:6px 2px;border-bottom:2px solid var(--line);align-self:end}
+.lg-cell{display:flex;align-items:center;padding:5px 2px;border-bottom:1px solid var(--line);min-width:0}
+.lg-inp{width:100%;border:1px solid transparent;border-radius:6px;padding:5px 6px;font-size:13px;background:transparent;min-width:0}
+.lg-inp:hover{border-color:var(--line)}
+.lg-inp:focus{border-color:var(--accent);background:#fff;outline:none}
+.lead-grid .ti-chev{font-size:40px;padding:0;line-height:1;display:flex;align-items:center;justify-content:center}
+.lg-editor{grid-column:1/-1;padding:8px 6px 16px;background:#fbfcfd;border-bottom:1px solid var(--line)}
 
 textarea.notes{width:100%;min-height:240px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;resize:vertical}
 .empty-state{color:var(--muted);font-style:italic;padding:8px 2px;font-size:12.5px}
@@ -513,6 +524,7 @@ let BUS=BU_DEFS.map(d=>Object.assign({},d,{data:state.bu[d.key]}));
 let archiveOpen={};
 let leadOpen=null;
 let leadsView="sources";
+let leadsBU="TSP";
 let cloudReady=false;
 
 /* Most recent Saturday 09:00 MST (UTC-7), as a UTC timestamp */
@@ -1013,21 +1025,47 @@ function entryRow(ent,fields,arr,after){
   item.appendChild(l1); item.appendChild(details);
   return item;
 }
-function leadRow(bu,ent){ return entryRow(ent,LEAD_FIELDS[bu.key],bu.data.leads,renderLeads); }
-function leadsCol(bu){
-  const col=el("div",{class:"bu-col"}); col.appendChild(colHead(bu));
-  const card=el("div",{class:"card"}); card.appendChild(el("h3",{text:"Lead Sources"}));
-  card.appendChild(el("button",{class:"btn primary small",style:"margin-bottom:10px",onClick:()=>{const id=uid();bu.data.leads.push({id,name:"",company:"",role:"",notes:"",status:1});leadOpen=id;save();renderLeads();}},"+ Add lead source"));
-  if(bu.data.leads.length===0) card.appendChild(el("div",{class:"empty-state",text:"No lead sources yet."}));
-  bu.data.leads.forEach(ent=>card.appendChild(leadRow(bu,ent)));
-  col.appendChild(card); return col;
+const LEAD_COLS={
+  TSP:[["name","Lead source"],["company","Company"],["role","Role"],["manager","Manager"],["managerUp1","Manager Up1"],["managerUp2","Manager Up2"]],
+  SI:[["name","Lead source"],["company","Company"],["role","Role"],["contact","WutzNxt contact"]],
+  ISV:[["product","WutzNxt product"],["name","Lead source"],["company","Company"],["role","Role"],["contact","WutzNxt contact"]]
+};
+const LEAD_EXTRA={
+  TSP:[["trainingsNeeded","Trainings Needed by Clients","chips"],["providesTraining","WutzNxt provides the training","check"],["notes","Notes","area"]],
+  SI:[["siNeeds","SI needs","area"],["notes","Notes","area"]],
+  ISV:[["notes","Notes","area"]]
+};
+function leadsGrid(bu){
+  const cols=LEAD_COLS[bu.key]||LEAD_COLS.TSP;
+  const tmpl="46px "+cols.map((c,i)=>i===0?"1.3fr":"1fr").join(" ")+" 110px 30px";
+  const grid=el("div",{class:"lead-grid",style:"grid-template-columns:"+tmpl});
+  grid.appendChild(el("div",{class:"lg-head"}));
+  cols.forEach(c=>grid.appendChild(el("div",{class:"lg-head",text:c[1]})));
+  grid.appendChild(el("div",{class:"lg-head",text:"Status"}));
+  grid.appendChild(el("div",{class:"lg-head"}));
+  bu.data.leads.forEach(ent=>{
+    const isOpen=ent.id===leadOpen;
+    const editor=el("div",{class:"lg-editor"}); editor.style.display=isOpen?"block":"none";
+    const chev=el("button",{class:"ti-chev"+(isOpen?" open":""),title:"More",onClick:()=>{const o=editor.style.display==="none";editor.style.display=o?"block":"none";chev.classList.toggle("open",o); leadOpen=o?ent.id:null;}},"▸");
+    grid.appendChild(el("div",{class:"lg-cell"},chev));
+    cols.forEach(c=>{ const inp=el("input",{type:"text",class:"lg-inp",value:ent[c[0]]||"",placeholder:c[1]}); inp.addEventListener("input",()=>{ent[c[0]]=inp.value;save();}); grid.appendChild(el("div",{class:"lg-cell"},inp)); });
+    grid.appendChild(el("div",{class:"lg-cell"}, starEditor(()=>ent.status||1,v=>{ent.status=v;save();})));
+    grid.appendChild(el("div",{class:"lg-cell"}, el("button",{class:"del",onClick:()=>{const i=bu.data.leads.indexOf(ent);if(i>=0)bu.data.leads.splice(i,1);save();renderLeads();}},"✕")));
+    (LEAD_EXTRA[bu.key]||[]).forEach(f=>{
+      if(f[2]==="chips"){ if(!Array.isArray(ent[f[0]]))ent[f[0]]=[]; editor.appendChild(el("label",{class:"fld-l",style:"margin-top:4px",text:f[1]})); editor.appendChild(chipListSug(ent[f[0]],allTrainings)); }
+      else if(f[2]==="check"){ const cb=el("input",{type:"checkbox"}); cb.checked=!!ent[f[0]]; cb.addEventListener("change",()=>{ent[f[0]]=cb.checked;save();}); editor.appendChild(el("label",{class:"lead-check"},cb,el("span",{text:f[1]}))); }
+      else { const ta=el("textarea",{class:"lead-ta"}); ta.value=ent[f[0]]||""; ta.addEventListener("input",()=>{ent[f[0]]=ta.value;save();}); editor.appendChild(el("div",{class:"fld"},el("label",{class:"fld-l",text:f[1]}),ta)); }
+    });
+    grid.appendChild(editor);
+  });
+  return grid;
 }
 function renderTrainingsNeeded(){
   const counts={};
   BUS.forEach(bu=> (bu.data.leads||[]).forEach(l=>{ (Array.isArray(l.trainingsNeeded)?l.trainingsNeeded:[]).forEach(tn=>{ const key=(tn||"").trim(); if(!key)return; counts[key]=(counts[key]||0)+1; }); }));
   const names=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]||a.localeCompare(b));
   const st=state.trainingNeedsStatus||(state.trainingNeedsStatus={});
-  const card=el("div",{class:"card",style:"max-width:760px"}); card.appendChild(el("h3",{text:"Trainings Needed"}));
+  const card=el("div",{class:"card",style:"max-width:760px"}); card.appendChild(el("h3",{text:"Trainings Needed by Clients"}));
   if(!names.length){ card.appendChild(el("div",{class:"empty-state",text:"No trainings needed captured yet. Add them in the Lead sources view (a lead source → Trainings Needed)."})); return card; }
   const body=el("tbody");
   names.forEach(nm=>{
@@ -1044,15 +1082,23 @@ function renderLeads(){
   const c=$("#cols-leads"); c.className=""; c.innerHTML="";
   c.appendChild(el("div",{class:"view-toggle"},
     el("button",{class:leadsView==="sources"?"on":"",onClick:()=>{leadsView="sources";renderLeads();}},"Lead sources"),
-    el("button",{class:leadsView==="needs"?"on":"",onClick:()=>{leadsView="needs";renderLeads();}},"Trainings needed")));
+    el("button",{class:leadsView==="needs"?"on":"",onClick:()=>{leadsView="needs";renderLeads();}},"Trainings Needed by Clients")));
   if(leadsView==="needs"){ c.appendChild(renderTrainingsNeeded()); return; }
   const wrap=el("div",{class:"lead-wrap"});
-  const grid=el("div",{class:"cols"}); BUS.forEach(bu=>grid.appendChild(leadsCol(bu))); wrap.appendChild(grid);
-  const card=el("div",{class:"card"}); card.appendChild(el("h3",{text:"General Contacts"}));
-  card.appendChild(el("button",{class:"btn primary small",style:"margin-bottom:10px",onClick:()=>{const id=uid();state.generalContacts.push({id,name:"",company:"",role:"",notes:"",status:1});leadOpen=id;save();renderLeads();}},"+ Add contact"));
-  if(!state.generalContacts.length) card.appendChild(el("div",{class:"empty-state",text:"No contacts yet."}));
-  state.generalContacts.forEach(item=>card.appendChild(entryRow(item,GC_FIELDS,state.generalContacts,renderLeads)));
+  const tabs=el("div",{class:"lead-bu-tabs"});
+  BUS.forEach(b=>tabs.appendChild(el("button",{class:leadsBU===b.key?"on":"",onClick:()=>{leadsBU=b.key;renderLeads();}},b.key+" Leads")));
+  wrap.appendChild(tabs);
+  const bu=BUS.find(x=>x.key===leadsBU)||BUS[0];
+  const card=el("div",{class:"card"}); card.appendChild(el("h3",{text:bu.name+" — Lead Sources"}));
+  card.appendChild(el("button",{class:"btn primary small",style:"margin-bottom:10px",onClick:()=>{const id=uid();bu.data.leads.push({id,name:"",company:"",role:"",manager:"",managerUp1:"",managerUp2:"",trainingsNeeded:[],providesTraining:false,notes:"",status:1});leadOpen=id;save();renderLeads();}},"+ Add lead source"));
+  if(!bu.data.leads.length) card.appendChild(el("div",{class:"empty-state",text:"No lead sources yet."}));
+  else card.appendChild(leadsGrid(bu));
   wrap.appendChild(card);
+  const gc=el("div",{class:"card"}); gc.appendChild(el("h3",{text:"General Contacts"}));
+  gc.appendChild(el("button",{class:"btn primary small",style:"margin-bottom:10px",onClick:()=>{const id=uid();state.generalContacts.push({id,name:"",company:"",role:"",notes:"",status:1});leadOpen=id;save();renderLeads();}},"+ Add contact"));
+  if(!state.generalContacts.length) gc.appendChild(el("div",{class:"empty-state",text:"No contacts yet."}));
+  state.generalContacts.forEach(item=>gc.appendChild(entryRow(item,GC_FIELDS,state.generalContacts,renderLeads)));
+  wrap.appendChild(gc);
   c.appendChild(wrap);
 }
 
